@@ -32,4 +32,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 """
+import time
+from datetime import datetime
 
+
+# first line to be in new file
+today = datetime.now().strftime("%m/%d/%Y")
+date_line = "Scan date: " + today
+
+# second line to be added to new file
+ro_num = input("Enter Repair Order number:")
+ro_line = "RO: " + ro_num
+
+# load and copy to list the contents of s.txt
+scan = []
+with open("s.txt", "r") as f:
+    for line in f:
+        scan.append(line)
+
+# representation of new file
+new = [date_line + "\n", ro_line + "\n"] + scan
+for line in new:
+    print(line)
+
+# write to new file
+with open("scan.txt", "w") as f:
+    for line in new:
+        f.write(line)
+
+# delete s.txt to avoid renaming issues with next scan file
+
+# Exit program
+time.sleep(3)
+print("Exiting...")
+time.sleep(2)
