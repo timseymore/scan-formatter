@@ -1,12 +1,12 @@
 """
 SCAN FORMATTER
 
-Tool used to format a .txt file associated with a scan tool.
+Script used to format a .txt file associated with an diagnostic scan tool
 
 - Expects a file named "s.txt" to be present in same directory as formatter.py
 - Copies txt from s.txt and appends it to the current date and a given repair order number
-- Creates scan.txt with the current date, r.o. number, and scan info
-- Deletes s.txt when finished to avoid problems with next scan file used
+- Creates scan.txt in same directory with the current date, r.o. number, and scan info
+- Deletes s.txt when finished to avoid naming issues with next scan file used
 
 
 MIT License
@@ -32,7 +32,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 """
-import time
+import time, os
 from datetime import datetime
 
 
@@ -50,19 +50,23 @@ with open("s.txt", "r") as f:
     for line in f:
         scan.append(line)
 
-# representation of new file
-new = [date_line + "\n", ro_line + "\n"] + scan
+# create list for new file
+new = [date_line + "\n", ro_line + "\n\n"] + scan
+
+# print representation of new file
+print("\n===== New File Output =====\n")
 for line in new:
     print(line)
 
-# write to new file
+# write data to new file (will overwrite any existing file)
 with open("scan.txt", "w") as f:
     for line in new:
         f.write(line)
 
 # delete s.txt to avoid renaming issues with next scan file
+os.remove("s.txt")
 
 # Exit program
 time.sleep(3)
-print("Exiting...")
+print("\nExiting...")
 time.sleep(2)
