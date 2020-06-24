@@ -4,6 +4,7 @@ SCAN FORMATTER
 Script used to format a .txt file associated with an diagnostic scan tool
 
 - Expects a file named "s.txt" to be present in same directory as formatter.py
+- If no file named "s.txt" is present then a "No codes" text will be added in place of scan info
 - Copies txt from s.txt and appends it to the current date and a given repair order number
 - Creates scan.txt in same directory with the current date, r.o. number, and scan info
 - Deletes s.txt when finished to avoid naming issues with next scan file used
@@ -32,41 +33,40 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 """
-import time, os
+import time
+import os
 from datetime import datetime
 
 
-# first line to be in new file
+# date line to be in new file
 today = datetime.now().strftime("%m/%d/%Y")
-date_line = "Scan date: " + today
+date_line = "Scan date: " + today + "\n"
 
-# second line to be added to new file
-ro_num = input("Enter Repair Order number:")
-ro_line = "RO: " + ro_num
+# ro number line to be added to new file
+ro_num = input("Enter Repair Order number: ")
+ro_line = "RO: " + ro_num + "\n\n"
 
 # load and copy to list the contents of s.txt
-scan = []
-with open("s.txt", "r") as f:
-    for line in f:
-        scan.append(line)
-
-# create list for new file
-new = [date_line + "\n", ro_line + "\n\n"] + scan
-
-# print representation of new file
-print("\n===== New File Output =====\n")
-for line in new:
-    print(line)
+scan_file = "s.txt"
+new_data = [date_line, ro_line]
+try:
+    with open(scan_file, "r") as f:
+        for line in f:
+            new_data.append(line)
+    os.remove(scan_file)
+except FileNotFoundError:
+    new_data.append("Passed: No codes found")
 
 # write data to new file (will overwrite any existing file)
+# print out data to console in file format
+print("\n===== New File Output =====\n")
 with open("scan.txt", "w") as f:
-    for line in new:
+    for line in new_data:
         f.write(line)
+        print(line, end="")
+print()
 
-# delete s.txt to avoid renaming issues with next scan file
-os.remove("s.txt")
-
-# Exit program
+# wait 5 seconds to review and then exit program
 time.sleep(3)
 print("\nExiting...")
 time.sleep(2)
